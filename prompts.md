@@ -52,3 +52,29 @@ If `best_split` does not find a valid split, create a leaf containing the mean y
 Use the `Node` class and `best_split` function rather than rewriting the split logic inside `fit`.
 
 Use NumPy for the tree calculations and do not use sklearn or any existing decision-tree library. Only implement the node structure, `RegressionTree` class, and `fit` method in this step. Do not implement `predict` or `visualize` yet.
+
+Add a `predict(X)` method to the `RegressionTree` class created in the previous step.
+
+The input X contains the feature values for the records I want to predict, with one row per record. It should have the same feature layout that was used when fitting the tree, but without the y column and without the extra column of 1s that was previously used for linear regression.
+
+For each record, start at the root of the tree and follow the splits until reaching a leaf. At each internal node, look at the feature stored in that node. If the record's value for that feature is less than the node's threshold, move to the left child. Otherwise, move to the right child. Continue until reaching a leaf, then use the prediction stored in that leaf as the prediction for the record.
+
+Repeat this for every row in X and return the results as a NumPy array containing one prediction per input record.
+
+Make sure the comparison uses the same `<` threshold rule as `best_split` and `fit`.
+
+Use NumPy only and the existing tree and Node structure. Do not use sklearn or another tree implementation, and do not implement `visualize` yet.
+
+Add a `visualize()` method to the `RegressionTree` class. Update `fit` if necessary so the tree stores a copy of the original training x and y values. This will allow `visualize()` to create the plot without requiring the training data to be passed in again.
+
+The plot should show the original training data as a scatter plot. It should also show vertical lines for the split thresholds used by the tree. Walk through the tree recursively and collect the threshold from each internal node, but only include thresholds for feature 0, since those correspond to the original x-axis.
+
+Show the tree's predictions across the range of x values. Create a fine grid of about 500 evenly spaced x values from the minimum training x to the maximum training x, call the existing `predict` method on this grid, and plot the resulting predictions as a line.
+
+The tree may also be trained using the feature schema (x, x², x³). Add an optional argument that accepts the extra feature functions needed to transform the x grid before passing it to `predict`. For example, this should allow the grid to be converted into columns for x, x², and x³ when those features were used during training.
+
+Make the split lines readable when there are many splits. For example, use thin and light vertical lines, or skip drawing the individual split lines when the number of splits becomes too large. This is important for `min_records=1`, where there may be hundreds of splits.
+
+Also add an optional `true_f` argument. If it is provided, evaluate it over the x grid and plot the true function along with the tree's predictions. Add an optional `title` argument so different experiment plots can be labeled later.
+
+Use only NumPy and matplotlib for the visualization. Use the existing `predict` method to generate the tree predictions rather than reimplementing the prediction logic inside `visualize`.
